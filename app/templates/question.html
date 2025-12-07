@@ -28,7 +28,7 @@
 </div>
             <div class="mb-4">
                 <span class="text-sm text-gray-600 font-medium">
-                    Recorda Solo deben ser preguntas que se respondan con nombres de otras personas!
+                    Recorda: Solo deben ser preguntas que se respondan con nombres de otras personas!
                 </span>
 
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tu pregunta:</label>
@@ -57,8 +57,8 @@
                 <div class="text-xs text-gray-600 font-bold">
                     Autor: {{ question.uploaded_by }}
                 </div>
-                <div class="text-xs text-red-400 font-mono mt-1">
-                    Fecha subida: {{ question.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
+                <div class="text-xs text-green-600 font-mono mt-1">
+                    Fecha publicada: {{ question.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
                 </div>
             </div>
 

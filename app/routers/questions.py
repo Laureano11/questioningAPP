@@ -50,7 +50,7 @@ async def question_detail(
     query = select(Answer).where(Answer.question_id == question_id).order_by(Answer.uploaded_at.desc())
     answers = session.exec(query).all()
 
-    opciones = ["Bauti", "Hipo", "Rata", "Choco", "Enzo","Lauri", "Passa", "Juanito", "Lalo", "Franza", "Giampe", "Meteo", "Pato"]
+    opciones = ["Bauti", "Hipo", "Rata", "Dama","Choco", "Enzo","Lauri", "Passa", "Juanito", "Lalo", "Franza", "Giampe", "Meteo", "Pato"]
     conteos = {nombre: 0 for nombre in opciones}
     for answer in answers:
         # Como guardamos "Lauri, Hipo", hay que separar el string
@@ -85,6 +85,7 @@ async def question_answer(
     content = ", ".join(content)
     new_answer = Answer(content=content,
                         question_id=question_id,
+                        uploaded_at=datetime.now(),
                         uploaded_by=username)
     session.add(new_answer)
     session.commit()
