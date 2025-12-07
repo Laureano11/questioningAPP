@@ -26,12 +26,28 @@
     </div>
 
     <div class="mt-8">
-        <div class="text-center mb-6">
-            <button id="toggle-reply"
-                    class="bg-indigo-600 text-white font-medium py-2 px-6 rounded-full shadow-lg hover:bg-indigo-700 hover:scale-105 transition transform duration-200 flex items-center gap-2 mx-auto">
-                <span>✍️</span> Responder
-            </button>
-        </div>
+        {% if request.session.get("username") %}
+
+   <div class="text-center mb-8 mt-4">
+    <button id="toggle-reply"
+            class="group relative inline-flex items-center gap-2 px-8 py-3 font-bold text-white transition-all duration-300 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1 hover:scale-105 focus:outline-none ring-offset-2 focus:ring-2 ring-indigo-500">
+
+        <span class="text-xl transition-transform group-hover:rotate-12">✍️</span>
+
+        <span class="tracking-wide">Escribir una respuesta</span>
+
+    </button>
+</div>
+    {% else %}
+
+    <div class="text-center mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <p class="text-gray-600 mb-2">Debes identificarte para responder.</p>
+        <a href="/login" class="inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition text-sm font-bold">
+            Iniciar Sesión
+        </a>
+    </div>
+
+{% endif %}
 
         <div id="reply-form" class="hidden max-w-2xl mx-auto mb-10 transition-all duration-500 ease-in-out">
             <form action="/question/{{ question.id }}/answer" method="post" class="bg-white p-4 rounded-2xl shadow-xl border border-indigo-100">
@@ -65,6 +81,24 @@
             </form>
         </div>
     </div>
+{% if answers %}
+<div class="mt-12 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            📊 Resultados en vivo
+        </h3>
+
+        <div class="relative h-64 w-full">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+
+
     <div class="mt-12">
     <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
         Respuestas
@@ -120,6 +154,56 @@
     cancelBtn.addEventListener('click', () => {
         form.classList.add('hidden');
         toggleBtn.classList.remove('hidden');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 2. Obtener el contexto del lienzo
+    const ctx = document.getElementById('myChart');
+
+    // 3. Crear el gráfico
+    // OJO: Usamos 'tojson' para que Jinja convierta la lista Python a Javascript
+    new Chart(ctx, {
+        type: 'bar', // Tipo de gráfico (barras)
+        data: {
+            labels: {{ opciones | tojson }}, // Nombres (Eje X)
+            datasets: [{
+                label: 'Votos',
+                data: {{ votos | tojson }},  // Números (Eje Y)
+                backgroundColor: 'rgba(79, 70, 229, 0.6)', // Color Indigo (transparente)
+                borderColor: 'rgba(79, 70, 229, 1)',       // Borde sólido
+                borderWidth: 1,
+                borderRadius: 5, // Bordes redondeados en las barras
+                barPercentage: 0.7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Para que no muestre decimales (1.5 votos no existe)
+                    },
+                    grid: {
+                        display: false // Quita las lineas de fondo para que sea más limpio
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Ocultamos la leyenda porque es obvia
+                }
+            }
+        }
     });
 </script>
 {% endblock %}
