@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Responder Pregunta {% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <a href="/question" class="text-gray-500 hover:text-indigo-600 mb-4 inline-flex items-center gap-1 transition">
+        &larr; Volver a preguntas
+    </a>
+
+    <div class="bg-white p-8 rounded-xl shadow-lg border border-indigo-100 mb-8">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xl">
+                {{ question.uploaded_by[0] | upper }}
+            </div>
+            <div>
+                <p class="font-bold text-gray-900">{{ question.uploaded_by }}</p>
+                <p class="text-xs text-gray-500">{{ question.uploaded_at.strftime('%d/%m/%Y a las %H:%M') }}</p>
+            </div>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 leading-relaxed">
+            {{ question.content }}
+        </h1>
+        <hr class="border-gray-100 my-6">
+    </div>
+
+    <div class="mt-8">
+        <div class="text-center mb-6">
+            <button id="toggle-reply"
+                    class="bg-indigo-600 text-white font-medium py-2 px-6 rounded-full shadow-lg hover:bg-indigo-700 hover:scale-105 transition transform duration-200 flex items-center gap-2 mx-auto">
+                <span>✍️</span> Responder
+            </button>
+        </div>
+
+        <div id="reply-form" class="hidden max-w-2xl mx-auto mb-10 transition-all duration-500 ease-in-out">
+            <form action="/question/{{ question.id }}/answer" method="post" class="bg-white p-4 rounded-2xl shadow-xl border border-indigo-100">
+
+                <h3 class="text-gray-700 font-semibold mb-3 px-1">Selecciona a las personas:</h3>
+               <div class="grid grid-cols-2 gap-3 mb-4">
+
+    {% for nombre in opciones %}
+    <label class="cursor-pointer">
+        <input type="checkbox" name="content" value="{{ nombre }}" class="peer sr-only">
+
+        <div class="p-3 rounded-xl border-2 border-gray-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition text-center text-gray-600 peer-checked:text-indigo-700 font-medium hover:bg-gray-50">
+            {{ nombre }}
+        </div>
+    </label>
+    {% endfor %}
+
+               </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" id="cancel-reply"
+                            class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 font-medium transition">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="bg-indigo-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition shadow-md">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="mt-12">
+    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        Respuestas
+        <span class="bg-indigo-100 text-indigo-700 text-sm py-0.5 px-2 rounded-full">{{ answers|length }}</span>
+    </h3>
+
+    <div class="space-y-4">
+        {% for answer in answers %}
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:border-indigo-100 transition">
+
+            <div class="flex justify-between items-start mb-2">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-indigo-600 text-sm">{{ answer.uploaded_by }}</span>
+                    <span class="text-gray-400 text-xs">• respondió:</span>
+                </div>
+                <span class="text-xs text-gray-400 font-mono">
+                    {{ answer.uploaded_at.strftime('%d/%m %H:%M') }}
+                </span>
+            </div>
+
+            <div class="text-gray-800 font-medium text-lg leading-relaxed">
+                <span class="bg-green-100 text-gray-800 px-2 py-1 rounded-md text-base mx-1 border border-green-200 shadow-sm">
+                    {{ answer.content }}
+                </span>
+            </div>
+
+        </div>
+        {% else %}
+
+        <div class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+            <div class="text-4xl mb-2">🦗</div>
+            <p class="text-gray-500 font-medium">¡Cri cri! Nadie ha respondido todavía.</p>
+            <p class="text-sm text-gray-400">Sé el primero en mojarte.</p>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('toggle-reply');
+    const cancelBtn = document.getElementById('cancel-reply');
+    const form = document.getElementById('reply-form');
+
+    // Mostrar form
+    toggleBtn.addEventListener('click', () => {
+        form.classList.remove('hidden');
+        toggleBtn.classList.add('hidden');
+    });
+
+    // Ocultar form
+    cancelBtn.addEventListener('click', () => {
+        form.classList.add('hidden');
+        toggleBtn.classList.remove('hidden');
+    });
+</script>
+{% endblock %}

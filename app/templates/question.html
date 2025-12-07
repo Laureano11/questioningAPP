@@ -27,9 +27,14 @@
     </label>
 </div>
             <div class="mb-4">
+                <span class="text-sm text-gray-600 font-medium">
+                    Recorda Solo deben ser preguntas que se respondan con nombres de otras personas!
+                </span>
+
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tu pregunta:</label>
+
                 <textarea name="content" rows="3" required
-                          placeholder="Escribe tu pregunta"
+                          placeholder="Ejemplo: Quien seria el primero en correr en una pelea de boliche?"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"></textarea>
             </div>
 
@@ -42,22 +47,34 @@
 
     <h3 class="text-lg font-bold text-gray-700 mb-4">Preguntas recientes</h3>
 
-    <div class="space-y-4">
-        {% for question in questions %}
-        <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
-            <p class="text-gray-800 text-lg">{{ question.content }}</p>
-            <div class="mt-2 text-xs text-gray-600 font-mono">
+<div class="space-y-4">
+    {% for question in questions %}
+    <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
+        <p class="text-gray-800 text-lg">{{ question.content }}</p>
 
-                Autor: {{ question.uploaded_by }}
+        <div class="flex justify-between items-end mt-4">
+            <div>
+                <div class="text-xs text-gray-600 font-bold">
+                    Autor: {{ question.uploaded_by }}
+                </div>
+                <div class="text-xs text-red-400 font-mono mt-1">
+                    Fecha subida: {{ question.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
+                </div>
             </div>
-            <div class="mt-2 text-xs text-gray-600 font-mono">
-                Fecha subida : {{question.uploaded_at}}
-            </div>
+
+            <a href="/question/{{ question.id }}"
+               class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition shadow-sm flex items-center gap-2">
+                Ver respuestas
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                  <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+                </svg>
+            </a>
         </div>
-        {% else %}
-        <p class="text-gray-500 italic text-center py-4">Nadie ha preguntado nada aún. ¡Sé el primero!</p>
-        {% endfor %}
     </div>
+    {% else %}
+    <p class="text-gray-500 italic text-center py-4">Nadie ha preguntado nada aún.</p>
+    {% endfor %}
+</div>
 
 </div>
 {% endblock %}
