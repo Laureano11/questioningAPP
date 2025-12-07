@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - FriendsApp{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto text-center mt-10">
+
+ <div class="flex space-x-4 items-center">
+
+    <a href="/question" class="text-sm bg-indigo-800 hover:bg-indigo-900 text-white px-3 py-2 rounded transition">
+        Preguntas
+    </a>
+
+    {% if request.session.get("username") %}
+
+        <span class="text-indigo-800 text-italic font-semibold">
+            Hola, {{ request.session.username }}
+        </span>
+        <a href="/logout" class="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition">
+            Salir
+        </a>
+    {% else %}
+
+    {% endif %}
+
+</div>
+
+  <ul class="space-y-2">
+    {% for usuario in usuarios %}
+    <li class="my-2 flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+        <div class=" m+1 h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold mr-3">
+            {{ usuario.username[0] | upper }} </div>
+        <div class="flex flex-col ">
+            <span class="font-medium text-gray-600">{{ usuario.username }}</span>
+        </div>
+    </li>
+    {% else %}
+    <li class="p-3 text-gray-500 italic">No hay amigos registrados aún.</li>
+    {% endfor %}
+</ul>
+
+<div class="mt-4 text-center">
+    <a href="/register" class="text-indigo-600 font-semibold hover:underline">Ir a Registrarse</a>
+</div>
+
+</div>
+{% endblock %}
