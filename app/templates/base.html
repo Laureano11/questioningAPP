@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi App de Amigos{% endblock %}</title>
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
@@ -16,20 +16,29 @@
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
     <nav class="bg-indigo-600 text-white shadow-lg">
-        <div class="container mx-auto px-0 py-4 flex justify-between items-center">
-            <a href="/" class="font-bold text-xl tracking-tight">🚀 QuestioningAPP</a>
-            <div>
-                <a href="/login" class="text-sm bg-indigo-500 hover:bg-indigo-800 px-4 py-2 rounded transition">
-                    Ingresar
-                </a>
-            </div>
-             <div>
-                <a href="/register" class="text-sm bg-indigo-500 hover:bg-white-800 px-4 py-2 rounded transition">
-                    Registrarse
-                </a>
-            </div>
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="/" class="font-bold text-lg md:text-xl tracking-tight truncate">
+            🚀 QuestioningAPP
+        </a>
+        <div class="flex items-center space-x-3">
+            {% if request.session.get("username")%}
+             <a href="/logout" class="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition">
+            Salir
+             </a>
+
+            {%else%}
+            <a href="/login"
+               class="text-xs md:text-sm bg-indigo-500 hover:bg-indigo-700 text-white px-3 py-2 rounded transition font-medium">
+                Ingresar
+            </a>
+            <a href="/register"
+               class="text-xs md:text-sm bg-white text-indigo-600 hover:bg-gray-100 px-3 py-2 rounded transition font-medium border border-transparent">
+                Registrarse
+            </a>
+            {%endif%}
         </div>
-    </nav>
+    </div>
+</nav>
 
     <main class="flex-grow container mx-auto px-4 py-6">
         {% block content %}

@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -64,20 +65,29 @@ async def register_user(
 
 @app.get("/question", response_class=HTMLResponse)
 async def question(request: Request, session: Session = Depends(get_session)):
-    return templates.TemplateResponse("question.html", {"request": request})
+    query = select(Question).order_by(Question.uploaded_at)
+    questions = session.exec(query).all()
+    return templates.TemplateResponse("question.html", {"request": request,
+                                                        "questions": questions})
 
 @app.post("/question")
 async def question(
     request: Request,
     content: str = Form(...),
-    # Inyectamos la sesión de base de datos
+    is_anonymous: Optional[str] = Form(None),
     session: Session = Depends(get_session)
-):
-    new_question= Question(content=content)
+    ):
+    real_user = request.session.get("username")
+    if is_anonymous:
+        final_author = "Anónimo 👻"  # Puedes poner un emoji para distinguir
+    else:
+        # Si no está logueado y no puso anónimo, ponemos "Desconocido" o lo mandamos al login
+        final_author = real_user if real_user else "Desconocido"
+    new_question= Question(content=content, uploaded_by=final_author, uploaded_at=datetime.datetime.now())
     session.add(new_question)
     session.commit()
-    session.refresh(question)
-    return RedirectResponse(url="/",status_code=303)
+    session.refresh(new_question)
+    return RedirectResponse(url="/question",status_code=303)
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -98,8 +108,7 @@ async def login_logic(
     statement = select(User).where(User.username == username)
     user = session.exec(statement).first()
 
-    # 2. VALIDAR
-    # ¿Existe el usuario? ¿La contraseña coincide?
+
     if not user or user.password != password:
         return templates.TemplateResponse("login.html", {
             "request": request,

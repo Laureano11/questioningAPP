@@ -12,12 +12,13 @@ class User(SQLModel, table=True):
 class Question(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     content: str = Field(default=None)
-    uploaded_at: datetime = Field(default_factory=datetime.utcnow)
-    #uploaded_by: int = Field(default=None, foreign_key="user.id")
+    uploaded_at: datetime = Field(default=None)
+    uploaded_by: str = Field(default="Anonimo")
 
 class Answer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     content: str = Field(index=True)
     uploaded_at: datetime = Field(default=None)
     question_id: int = Field(default=None, foreign_key="question.id")
-    #uploaded_by: int= Field(default=None, foreign_key="user.id")
+    uploaded_by: str= Field(default="Anonimo")
+

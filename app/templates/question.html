@@ -9,12 +9,30 @@
         <h2 class="text-xl font-bold text-gray-800 mb-4">💬 Deja tu pregunta anónima</h2>
 
         <form action="/question" method="post">
+  <div class="flex items-center justify-between mb-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
+    <span class="text-sm text-gray-600 font-medium">¿Ocultar tu nombre?</span>
+
+    <label class="inline-flex items-center cursor-pointer">
+        <input type="checkbox" name="is_anonymous" class="sr-only peer">
+
+        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer
+                    peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white
+                    after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300
+                    after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                    peer-checked:bg-indigo-600"></div>
+
+        <span class="ms-3 text-sm font-medium text-gray-500 peer-checked:text-indigo-600">
+            Anónimo
+        </span>
+    </label>
+</div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tu pregunta:</label>
                 <textarea name="content" rows="3" required
-                          placeholder="¿Qué opinan de...?"
+                          placeholder="Escribe tu pregunta"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"></textarea>
             </div>
+
             <button type="submit"
                     class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
                 Publicar Pregunta
@@ -27,9 +45,13 @@
     <div class="space-y-4">
         {% for question in questions %}
         <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition">
-            <p class="text-gray-800 text-lg">“{{ question.content }}”</p>
-            <div class="mt-2 text-xs text-gray-400 font-mono">
-                ID: #{{ question.id }}
+            <p class="text-gray-800 text-lg">{{ question.content }}</p>
+            <div class="mt-2 text-xs text-gray-600 font-mono">
+
+                Autor: {{ question.uploaded_by }}
+            </div>
+            <div class="mt-2 text-xs text-gray-600 font-mono">
+                Fecha subida : {{question.uploaded_at}}
             </div>
         </div>
         {% else %}
